@@ -1,0 +1,37 @@
+---
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: Update Repo Index
+    apt:
+      upgrade: dist
+      update_cache: yes
+    changed_when: false
+
+- hosts: webdb_server
+  become: true
+  tasks:
+
+  - name: NTP + MySQL Install
+    apt:
+      name:
+        - ntp
+        - mysql-server
+      state: latest
+
+  - name: Openstack Package
+    command: snap install --edge microstack --classic
+
+  - name: MessageQueue + MemCached Install
+    apt:
+      name:
+        - rabbitmq-server
+        - memcached
+      state: latest
+
+  - name: ETCD Install
+    apt:
+      name:
+        - etcd
+      state: latest
